@@ -1,6 +1,6 @@
 package ru.service.constant;
 
-public class TextConstants {
+public class ProductsConstants {
     public final static String FIRST_CONDITION_TEXT = "Откройте свой путь к успеху с индивидуальным инвестиционным счетом (ИИС) от нашего банка! Воспользуйтесь налоговыми льготами и начните инвестировать с умом. Пополните счет до конца года и получите выгоду в виде вычета на взнос в следующем налоговом периоде. Не упустите возможность разнообразить свой портфель, снизить риски и следить за актуальными рыночными тенденциями. Откройте ИИС сегодня и станьте ближе к финансовой независимости!";
     public final static String SECOND_CONDITION_TEXT="Откройте свою собственную «Копилку» с нашим банком! «Копилка» — это уникальный банковский инструмент, который поможет вам легко и удобно накапливать деньги на важные цели. Больше никаких забытых чеков и потерянных квитанций — всё под контролем!\n" +
             "\n" +
@@ -26,8 +26,15 @@ public class TextConstants {
             "Широкий выбор кредитных продуктов. Мы предлагаем кредиты на различные цели: покупку недвижимости, автомобиля, образование, лечение и многое другое.\n" +
             "\n" +
             "Не упустите возможность воспользоваться выгодными условиями кредитования от нашей компании!" ;
-
-
-
-
+     public static final String FIRST_CONDITION_PRODUCT_ID = "147f6a0f-3b91-413b-ab99-87f081d60d5a";
+     public static final String SECOND_CONDITION_PRODUCT_ID = "59efc529-2fff-41af-baff-90ccd7402925";
+     public static final String THIRD_CONDITION_PRODUCT_ID = "ab138afb-f3ba-4a93-b74f-0fcee86d447f";
+     public static final String FIRST_CONDITION_PRODUCT_NAME = "Invest 500";
+     public static final String SECOND_CONDITION_PRODUCT_NAME = "Top Saving";
+     public static final String THIRD_CONDITION_PRODUCT_NAME = "Простой кредит";
+     public static final String DEBIT = "DEBIT";
+     public static final String INVEST = "INVEST";
+     public static final String SAVING = "SAVING";
+     public static final String CREDIT = "CREDIT";
+    
 }
