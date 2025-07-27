@@ -3,10 +3,8 @@ package ru.service.repository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.service.model.ProductDTO;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -18,13 +16,6 @@ public class RecommendationsRepository {
 
     public RecommendationsRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public int getRandomTransactionAmount(UUID userId) {
-        Integer result = jdbcTemplate.queryForObject(
-                "SELECT amount FROM transactions t LIMIT 1",
-                Integer.class);
-        return result != null ? result : 0;
     }
 
     public boolean userHasProductType(UUID userId, String productType) {

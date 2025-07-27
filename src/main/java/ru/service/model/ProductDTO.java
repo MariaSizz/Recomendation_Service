@@ -1,7 +1,5 @@
 package ru.service.model;
 
-import java.util.UUID;
-
 public class ProductDTO {
     private String name;
     private String id;
