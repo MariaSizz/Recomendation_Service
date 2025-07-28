@@ -19,7 +19,7 @@ public class RecommendationsRepository {
     }
 
     public boolean userHasProductType(UUID userId, String productType) {
-        String sql = """
+        final String sql = """
                 SELECT COUNT(*) > 0
                 FROM transactions t
                 JOIN products p ON t.product_id = p.id
@@ -33,7 +33,7 @@ public class RecommendationsRepository {
     }
 
     public int getTotalDepositsByProductType(UUID userId, String productType) {
-        String sql = """
+        final String sql = """
                 SELECT COALESCE(SUM(t.amount), 0)
                 FROM transactions t
                 JOIN products p ON t.product_id = p.id
@@ -43,7 +43,7 @@ public class RecommendationsRepository {
     }
 
     public int getTotalSpendingByProductType(UUID userId, String productType) {
-        String sql = """
+        final String sql = """
                 SELECT COALESCE(SUM(t.amount), 0)
                 FROM transactions t
                 JOIN products p ON t.product_id = p.id
@@ -53,7 +53,7 @@ public class RecommendationsRepository {
     }
 
     public int getTotalSavingsDeposits(UUID userId) {
-        String sql = """
+        final String sql = """
                 SELECT COALESCE(SUM(t.amount), 0)
                 FROM transactions t
                 JOIN products p ON t.product_id = p.id
