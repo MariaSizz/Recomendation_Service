@@ -35,4 +35,5 @@ public class RecommendationController {
     public UsersRecommendationsDTO retrieveRecommendationsForUser(@PathVariable("userId") UUID userId) {
         return service.retrieveRecommendationsForUser(userId);
     }
+
 }
