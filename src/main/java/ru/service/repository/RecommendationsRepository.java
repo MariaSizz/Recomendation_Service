@@ -12,6 +12,7 @@ import static ru.service.constant.ProductsConstants.*;
 
 @Repository
 public class RecommendationsRepository {
+
     private final JdbcTemplate jdbcTemplate;
 
     public RecommendationsRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
