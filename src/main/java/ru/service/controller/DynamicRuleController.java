@@ -24,13 +24,13 @@ private final DynamicRuleService dynamicRuleService;
 
     @GetMapping
     public ResponseEntity<List<DynamicRule>> getAllRules(){
-        final List<DynamicRule> rules = dynamicRuleService.getRules();
+        final List<DynamicRule> rules = dynamicRuleService.getAllRules();
         return ResponseEntity.ok(rules);
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteRule(@PathVariable String productId ){
-        dynamicRuleService.removeRule(productId);
+        dynamicRuleService.deleteRule(productId);
         return ResponseEntity.noContent().build();
     }
 

@@ -1,41 +1,86 @@
 package ru.service.service;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.stereotype.Service;
 import ru.service.model.DynamicRule;
-import ru.service.repository.DynamicRuleRepository;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import ru.service.handler.RuleQueryHandler;
+import ru.service.handler.impl.ActiveUserOfQueryHandler;
+import ru.service.handler.impl.TransactionSumCompareDepositWithdrawQueryHandler;
+import ru.service.handler.impl.TransactionSumCompareQueryHandler;
+import ru.service.handler.impl.UserQueryHandler;
+import ru.service.model.RuleQuery;
+import ru.service.repository.DynamicRuleRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class DynamicRuleService {
-private final DynamicRuleRepository repository;
-private final Cache<String, List<DynamicRule>> cache;
+    @Autowired
+    private DynamicRuleRepository dynamicRuleRepository;
 
-    public DynamicRuleService(DynamicRuleRepository repository) {
-        this.repository = repository;
-            this.cache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).maximumSize(100).build();
-    }
-    public void createRule(DynamicRule dynamicRule){
-        repository.addDynamicRule(dynamicRule);
-        cache.invalidateAll();
-    }
-    public List<DynamicRule> getRules(){
-        return repository.getAllRules();
-    }
-    public void removeRule(String productId){
-        repository.deleteRule(productId);
-        cache.invalidateAll();
-    }
-    public List<DynamicRule> getRulesForUser(String userId){
-        final List<DynamicRule> cachedRules = cache.getIfPresent(userId);
-        if (cachedRules != null) {
-            return cachedRules;
+    @Autowired
+    private UserQueryHandler userOfQueryHandler;
+
+    @Autowired
+    private ActiveUserOfQueryHandler activeUserOfQueryHandler;
+
+    @Autowired
+    private TransactionSumCompareQueryHandler transactionSumCompareQueryHandler;
+
+    @Autowired
+    private TransactionSumCompareDepositWithdrawQueryHandler transactionSumCompareDepositWithdrawQueryHandler;
+
+    public DynamicRule createRule(DynamicRule rule){
+        DynamicRule save = null;
+        try {
+            save = dynamicRuleRepository.save(rule);
+        }catch (JsonProcessingException e){
+            return new DynamicRule();
         }
-        final List<DynamicRule> allRules = repository.getAllRules();
-        cache.put(userId, allRules);
-        return allRules;
+        return save;
+    }
+    public List<DynamicRule> getAllRules() {
+        return dynamicRuleRepository.findAll();
+    }
+
+    public void deleteRule(String productId) {
+        dynamicRuleRepository.delete(productId);
+    }
+
+    public boolean evaluateRules(String userId) {
+        List<DynamicRule> rules = dynamicRuleRepository.findAll();
+        for (DynamicRule rule : rules) {
+            boolean result = true;
+            for (RuleQuery query : rule.getRule()) {
+                RuleQueryHandler handler = getHandler(query.getQuery());
+                boolean queryResult = handler.handle(userId, query.getArguments());
+                if (query.isNegate()) {
+                    queryResult = !queryResult;
+                }
+                result = result && queryResult;
+            }
+            if (result) {
+                //добавить рекомендацию
+            }
+        }
+        return false; // или true, если есть рекомендации
+    }
+
+    private RuleQueryHandler getHandler(String queryType) {
+        switch (queryType) {
+            case "USER_OF":
+                return userOfQueryHandler;
+            case "ACTIVE_USER_OF":
+                return activeUserOfQueryHandler;
+            case "TRANSACTION_SUM_COMPARE":
+                return transactionSumCompareQueryHandler;
+            case "TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW":
+                return transactionSumCompareDepositWithdrawQueryHandler;
+            default:
+                throw new IllegalArgumentException("Unknown query type: " + queryType);
+        }
     }
 }

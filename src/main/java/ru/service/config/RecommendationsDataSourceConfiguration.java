@@ -33,4 +33,8 @@ public class RecommendationsDataSourceConfiguration {
     ) {
         return new JdbcTemplate(dataSource);
     }
+    @Bean(name = "postgresJdbcTemplate")
+    public JdbcTemplate postgresJdbcTemplate(@Qualifier("defaultDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
 }
