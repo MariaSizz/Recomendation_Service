@@ -1,0 +1,4 @@
+2025-08-04 21:01:26.380555+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "DYNAMIC_RULES" не найдена
+Table "DYNAMIC_RULES" not found; SQL statement:
+INSERT INTO dynamic_rules (product_name, product_id, product_text, rule) VALUES (?, ?, ?, ?) RETURNING id [42102-232]

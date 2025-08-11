@@ -1,7 +1,6 @@
 package ru.service.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.service.handler.RuleQueryHandler;
 import ru.service.handler.impl.ActiveUserOfQueryHandler;
@@ -13,6 +12,8 @@ import ru.service.model.RuleQuery;
 import ru.service.repository.DynamicRuleRepository;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Service
@@ -64,10 +65,9 @@ public class DynamicRuleService {
                 result = result && queryResult;
             }
             if (result) {
-                //добавить рекомендацию
             }
         }
-        return false; // или true, если есть рекомендации
+        return false;
     }
 
     private RuleQueryHandler getHandler(String queryType) {

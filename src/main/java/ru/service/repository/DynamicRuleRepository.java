@@ -3,15 +3,28 @@ package ru.service.repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.service.config.RuleCache;
 import ru.service.model.DynamicRule;
 import ru.service.model.RuleQuery;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class DynamicRuleRepository {
@@ -27,7 +40,7 @@ public class DynamicRuleRepository {
     private RuleCache ruleCache;
 
     public DynamicRule save(DynamicRule rule) throws JsonProcessingException {
-        String sql = "INSERT INTO dynamic_rules (product_name, product_id, product_text, rule) VALUES (?, ?, ?, ?::jsonb) RETURNING id";
+        final String sql = "INSERT INTO dynamic_rules (product_name, product_id, product_text, rule) VALUES (?, ?, ?, ?::jsonb) RETURNING id";
         Integer id = jdbcTemplate.queryForObject(sql, new Object[]{
                 rule.getProductName(),
                 rule.getProductId(),
@@ -40,7 +53,7 @@ public class DynamicRuleRepository {
     }
 
     public List<DynamicRule> findAll() {
-        String sql = "SELECT * FROM dynamic_rules";
+        final String sql = "SELECT * FROM dynamic_rules";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             DynamicRule rule = new DynamicRule();
             rule.setId(rs.getInt("id"));
@@ -60,7 +73,7 @@ public class DynamicRuleRepository {
     }
 
     public void delete(String productId) {
-        String sql = "DELETE FROM dynamic_rules WHERE product_id = ?";
+        final String sql = "DELETE FROM dynamic_rules WHERE product_id = ?";
         jdbcTemplate.update(sql, productId);
         ruleCache.invalidate(productId);
     }
@@ -71,7 +84,7 @@ public class DynamicRuleRepository {
             return cachedRule;
         }
 
-        String sql = "SELECT * FROM dynamic_rules WHERE product_id = ?";
+        final String sql = "SELECT * FROM dynamic_rules WHERE product_id = ?";
         DynamicRule rule = jdbcTemplate.queryForObject(sql, new Object[]{productId}, (rs, rowNum) -> {
             DynamicRule dynamicRule = new DynamicRule();
             dynamicRule.setId(rs.getInt("id"));
