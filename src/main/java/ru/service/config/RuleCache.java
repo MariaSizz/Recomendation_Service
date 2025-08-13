@@ -26,8 +26,12 @@ public class RuleCache {
         cache.put(key, rule);
     }
 
-    public void invalidate(String key) {
-        cache.invalidate(key);
+    public void invalidateAll(){
+        cache.invalidateAll();
+    }
+
+    public void invalidate(String productId){
+        cache.invalidate(productId);
     }
 }
 

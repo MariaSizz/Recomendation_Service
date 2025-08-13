@@ -3,6 +3,7 @@ package ru.service.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.service.model.DynamicRule;
+import ru.service.model.RuleQuery;
 import ru.service.service.DynamicRuleService;
 
 import java.util.List;
@@ -32,6 +33,11 @@ private final DynamicRuleService dynamicRuleService;
     public ResponseEntity<Void> deleteRule(@PathVariable String productId ){
         dynamicRuleService.deleteRule(productId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, I>> statistics(){
+
     }
 
 }

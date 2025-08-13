@@ -8,6 +8,15 @@ public class DynamicRule {
     private String productId;
     private String productText;
     private List<RuleQuery> rule;
+    private Integer ruleCount;
+
+    public Integer getRuleCount() {
+        return ruleCount;
+    }
+
+    public void setRuleCount(Integer ruleCount) {
+        this.ruleCount = ruleCount;
+    }
 
     public Integer getId() {
         return id;

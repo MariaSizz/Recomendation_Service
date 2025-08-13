@@ -1,6 +1,7 @@
 package ru.service.bot;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.TelegramException;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -37,14 +38,14 @@ private String token;
     }
 
     private void sendRecommendations(Long chatId, String userName){
-        //отправляет пользователю запрос с рекомендованными продуктами
+    service
     }
 
     private void sendResponse(Long chatId, String message){
-        final SendResponse response = telegramBot.execute(new SendMessage(chatId, message));
-        if (!response.isOk()) {
-            //залогировать
-        }
+            try {telegramBot.execute(new SendMessage(chatId, message));
+            } catch (RuntimeException e) {
+               e.printStackTrace();
+            }
     }
 
 

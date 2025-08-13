@@ -18,7 +18,7 @@ public class ActiveUserOfQueryHandler implements RuleQueryHandler {
         return checkActiveUserOfProduct(userId, productType);
     }
     private boolean checkActiveUserOfProduct(String userId, String productType) {
-        String sql = "SELECT COUNT(*) FROM transactions WHERE user_id = ? AND product_type = ? GROUP BY user_id HAVING COUNT(*) >= 5";
+        final String sql = "SELECT COUNT(*) FROM transactions WHERE user_id = ? AND product_type = ? GROUP BY user_id HAVING COUNT(*) >= 5";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{userId, productType}, Integer.class);
         return count != null && count > 0;
     }

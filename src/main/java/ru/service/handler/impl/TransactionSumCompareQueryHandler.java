@@ -22,11 +22,11 @@ public class TransactionSumCompareQueryHandler implements RuleQueryHandler {
         return compareTransactionSum(userId, productType, transactionType, comparisonOperator, constant);
     }
     private boolean compareTransactionSum(String userId, String productType, String transactionType, String comparisonOperator, int constant) {
-        String sql = "SELECT SUM(amount) FROM transactions WHERE user_id = ? AND product_type = ? AND transaction_type = ?";
+        final  String sql = "SELECT SUM(amount) FROM transactions WHERE user_id = ? AND product_type = ? AND transaction_type = ?";
         Integer sum = jdbcTemplate.queryForObject(sql, new Object[]{userId, productType, transactionType}, Integer.class);
 
         if (sum == null) {
-            sum = 0; // Если нет транзакций, считаем сумму равной 0
+            sum = 0;
         }
         switch (comparisonOperator) {
             case ">":

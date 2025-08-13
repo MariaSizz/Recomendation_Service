@@ -21,7 +21,7 @@ public class TransactionSumCompareDepositWithdrawQueryHandler implements RuleQue
         return compareDepositWithdraw(userId, productType, comparisonOperator);
     }
     private boolean compareDepositWithdraw(String userId, String productType, String comparisonOperator) {
-        String sql = "SELECT " +
+        final  String sql = "SELECT " +
                 "SUM(CASE WHEN transaction_type = 'DEPOSIT' THEN amount ELSE 0 END) AS deposit_sum, " +
                 "SUM(CASE WHEN transaction_type = 'WITHDRAW' THEN amount ELSE 0 END) AS withdraw_sum " +
                 "FROM transactions WHERE user_id = ? AND product_type = ?";
