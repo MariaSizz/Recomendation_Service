@@ -19,7 +19,7 @@ public class UserQueryHandler implements RuleQueryHandler {
         return checkUserOfProduct(userId, productType);
     }
     private boolean checkUserOfProduct(String userId, String productType) {
-        String sql = "SELECT COUNT(*) FROM transactions WHERE user_id = ? AND product_type = ?";
+        final String sql = "SELECT COUNT(*) FROM transactions WHERE user_id = ? AND product_type = ?";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{userId, productType}, Integer.class);
         return count != null && count > 0;
     }
