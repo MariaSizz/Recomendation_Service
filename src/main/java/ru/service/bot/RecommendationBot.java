@@ -1,52 +1,81 @@
 package ru.service.bot;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.TelegramException;
-import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.SendResponse;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import ru.service.model.ProductDTO;
 import ru.service.service.DynamicRuleService;
 
+import java.util.List;
+
 @Component
-public class RecommendationBot {
-private final TelegramBot telegramBot;
-private final DynamicRuleService service;
+public class RecommendationBot implements UpdatesListener {
+    private final TelegramBot telegramBot;
+    private final DynamicRuleService service;
 
-@Value("${telegram.bot.token}")
-private String token;
+    @Value("${telegram.bot.token}")
+    private String token;
 
 
-    public RecommendationBot(DynamicRuleService service) {
-        this.telegramBot = new TelegramBot(token);
+    public RecommendationBot(TelegramBot telegramBot, DynamicRuleService service) {
+        this.telegramBot = telegramBot;
         this.service = service;
     }
 
-    public void handleUpdate(Update update){
-        if (update.message() != null) {
-            final Message message = update.message();
-            final String command = message.text();
+    @PostConstruct
+    public void startBot() {
+        telegramBot.setUpdatesListener(this);
+    }
+
+    @Override
+    public int process(List<Update> list) {
+        list.forEach(update -> {
+            if (update.message() == null || update.message().text() == null) return;
+
+            Long id = update.message().chat().id();
+            final String command = update.message().text();
+
             if (command.startsWith("/recommend")) {
-                final String userName = command.substring(11);
-                sendRecommendations(message.chat().id(), userName);
+                String username = command.substring("/recommend".length()).trim();
+                if (username.length() < 5) {
+                    sendResponse(id,
+                            "❌ Имя пользователя должно содержать минимум 5 символов\n" +
+                                    "Пример: /recommend клиент12345");
+                    return;
+                }
+                final String userName = command.substring(11).trim();
+                sendRecommendations(id, userName);
             } else {
-                sendResponse(message.chat().id(), "Используйте ¨/recommend username¨ для получения ваших рекоммендаций.");
+                sendResponse(id, "Используйте ¨/recommend username¨ для получения ваших рекоммендаций.");
             }
+        });
+        return UpdatesListener.CONFIRMED_UPDATES_ALL;
+    }
+
+    private void sendRecommendations(Long chatId, String username) {
+        try {
+            List<ProductDTO> recommendationsForUser = service.getRecommendationsForUser(username);
+            if (recommendationsForUser.isEmpty()) {
+                sendResponse(chatId, "Пользователь «" + username + "» не найден, или нет рекомендаций");
+            } else {
+                StringBuilder response = new StringBuilder("*Рекомендации для " + username + "*:\n\n");
+                recommendationsForUser.forEach(p ->
+                        response.append("🔹 *").append(p.getName()).append("*: ").append(p.getText()).append("\n"));
+                sendResponse(chatId, response.toString());
+            }
+        } catch (Exception e) {
+            sendResponse(chatId, "Ошибка при обработке запроса. Попробуйте позже.");
         }
+
     }
 
-    private void sendRecommendations(Long chatId, String userName){
-    service
+    private void sendResponse(Long chatId, String message) {
+        telegramBot.execute(new SendMessage(chatId, message).parseMode(ParseMode.Markdown));
     }
-
-    private void sendResponse(Long chatId, String message){
-            try {telegramBot.execute(new SendMessage(chatId, message));
-            } catch (RuntimeException e) {
-               e.printStackTrace();
-            }
-    }
-
 
 }

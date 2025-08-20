@@ -3,6 +3,5 @@ CREATE TABLE dynamic_rules (
     product_name VARCHAR(255),
     product_id VARCHAR(255) UNIQUE,
     product_text TEXT,
-    rule JSONB,
-    rule_count INTEGER
+    rule JSONB
 );

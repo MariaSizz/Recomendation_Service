@@ -1,4 +1,4 @@
-package ru.service.model;
+package ru.service.model.entity;
 
 import java.util.List;
 

@@ -3,8 +3,9 @@ package ru.service.config;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.stereotype.Component;
-import ru.service.model.DynamicRule;
+import ru.service.model.entity.DynamicRule;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -13,8 +14,8 @@ public class RuleCache {
 
     public RuleCache() {
         this.cache = Caffeine.newBuilder()
-                .expireAfterWrite(10, TimeUnit.MINUTES) // Кеш будет истекать через 10 минут
-                .maximumSize(100) // Максимальное количество элементов в кеше
+                .expireAfterWrite(10, TimeUnit.MINUTES)
+                .maximumSize(100)
                 .build();
     }
 
@@ -23,14 +24,16 @@ public class RuleCache {
     }
 
     public void put(String key, DynamicRule rule) {
+        Objects.requireNonNull(key, "Cache key cannot be null");
+        Objects.requireNonNull(rule, "Cache value cannot be null");
         cache.put(key, rule);
     }
 
-    public void invalidateAll(){
+    public void invalidateAll() {
         cache.invalidateAll();
     }
 
-    public void invalidate(String productId){
+    public void invalidate(String productId) {
         cache.invalidate(productId);
     }
 }

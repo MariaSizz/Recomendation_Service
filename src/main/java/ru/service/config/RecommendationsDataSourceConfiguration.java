@@ -15,9 +15,10 @@ import javax.sql.DataSource;
 public class RecommendationsDataSourceConfiguration {
     @Primary
     @Bean(name = "defaultDataSource")
-    public DataSource defaultDataSource(DataSourceProperties properties){
+    public DataSource defaultDataSource(DataSourceProperties properties) {
         return properties.initializeDataSourceBuilder().build();
     }
+
     @Bean(name = "recommendationsDataSource")
     public DataSource recommendationsDataSource(@Value("${application.recommendations-db.url}") String recommendationsUrl) {
         var dataSource = new HikariDataSource();
@@ -33,6 +34,7 @@ public class RecommendationsDataSourceConfiguration {
     ) {
         return new JdbcTemplate(dataSource);
     }
+
     @Bean(name = "postgresJdbcTemplate")
     public JdbcTemplate postgresJdbcTemplate(@Qualifier("defaultDataSource") DataSource dataSource) {
         return new JdbcTemplate(dataSource);

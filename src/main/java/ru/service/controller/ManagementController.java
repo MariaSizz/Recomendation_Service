@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.service.config.RuleCache;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/management")
 public class ManagementController {
 
-   private final RuleCache ruleCache;
-   private final BuildProperties buildProperties;
+    private final RuleCache ruleCache;
+    private final BuildProperties buildProperties;
 
+    @Autowired
     public ManagementController(RuleCache ruleCache, BuildProperties buildProperties) {
         this.ruleCache = ruleCache;
         this.buildProperties = buildProperties;
     }
 
     @PostMapping("/info")
-    public ResponseEntity<Map<String, String>> getRuleStatistics(){
+    public ResponseEntity<Map<String, String>> getAppInfo() {
         final Map<String, String> map = new HashMap<>();
         map.put("Name", buildProperties.getName());
         map.put("Version", buildProperties.getVersion());
@@ -33,7 +33,7 @@ public class ManagementController {
     }
 
     @PostMapping("/clear-cashes")
-    public ResponseEntity<String> clearCashes(){
+    public ResponseEntity<String> clearCashes() {
         ruleCache.invalidateAll();
         return ResponseEntity.ok("Кеш успешно очищен");
     }

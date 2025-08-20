@@ -1,22 +1,19 @@
-package ru.service.model;
+package ru.service.model.entity;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 public class DynamicRule {
+
     private Integer id;
+    @JsonProperty("product_name")
     private String productName;
+    @JsonProperty("product_id")
     private String productId;
+    @JsonProperty("product_text")
     private String productText;
     private List<RuleQuery> rule;
-    private Integer ruleCount;
-
-    public Integer getRuleCount() {
-        return ruleCount;
-    }
-
-    public void setRuleCount(Integer ruleCount) {
-        this.ruleCount = ruleCount;
-    }
 
     public Integer getId() {
         return id;
