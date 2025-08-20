@@ -13,8 +13,8 @@ public class RuleCache {
 
     public RuleCache() {
         this.cache = Caffeine.newBuilder()
-                .expireAfterWrite(10, TimeUnit.MINUTES) // Кеш будет истекать через 10 минут
-                .maximumSize(100) // Максимальное количество элементов в кеше
+                .expireAfterWrite(10, TimeUnit.MINUTES)
+                .maximumSize(100)
                 .build();
     }
 
